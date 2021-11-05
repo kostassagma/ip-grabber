@@ -132,7 +132,7 @@ const CreateAccount: NextPage = () => {
       </div>
       <p className="text-xs">
         Already have an account?{" "}
-        <Link href="/login">
+        <Link href="/login" passHref>
           <a className="inline-block font-bold text-blue-500 hover:text-blue-800">
             Login
           </a>

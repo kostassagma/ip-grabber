@@ -51,8 +51,8 @@ const Login: NextPage = () => {
             </button>
           </div>
           <p className="text-xs">
-            Don't already have an account?{" "}
-            <Link href="/join">
+            Don{"'"}t already have an account?{" "}
+            <Link href="/join" passHref>
               <a className="inline-block font-bold text-blue-500 hover:text-blue-800">
                 Create One
               </a>
