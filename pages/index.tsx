@@ -1,8 +1,18 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import Head from "next/head";
 
 const Home: NextPage = () => {
   return (
+    <>
+    <Head>
+      <title>Ip Grabber</title>
+      <meta
+        name="description"
+        content="Get insight into hardware used to access your website"
+      />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </Head>
     <div className="h-screen flex justify-center p-10 items-center">
       <div>
         <h1 className="font-bold text-7xl ">Ip Grabber</h1>
@@ -17,6 +27,7 @@ const Home: NextPage = () => {
       </div>
       <div className="absolute bottom-0 right-0 w-20 h-10 bg-black"></div>
     </div>
+    </>
   );
 };
 
