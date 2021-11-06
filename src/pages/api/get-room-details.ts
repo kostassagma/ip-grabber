@@ -7,9 +7,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const [err, {id}] = checkParamPresence(["id"], req, res, "GET")
-  if (err) return
-  console.log(id);
-  res.status(200).json({
+  if (err) return;
+  
+  return res.status(200).json({
     link: "skroutz.gr",
     id: id,
     visitors: [

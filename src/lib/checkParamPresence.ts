@@ -17,23 +17,23 @@ export default function checkParamPresence(
   // Checking if parameters are present
   if (method === "GET") {
     // Checking Url Parameters for GET requests
-    params.map((param) => {
+    for (let param of params) {
       let arg = req.query[param];
       if (!arg) {
         res.status(400).json({ Err: `${param} missing` });
         return [true, {}];
       }
-    });
+    }
     return [false, { ...req.query }];
   } else {
     // Checking Body for POST/UPDATE/DELETE requests
-    params.map((param) => {
+    for (let param of params) {
       let arg = req.body[param];
       if (!arg) {
         res.status(400).json({ Err: `${param} missing` });
         return [true, {}];
       }
-    });
+    }
     return [false, { ...req.body }];
   }
 }

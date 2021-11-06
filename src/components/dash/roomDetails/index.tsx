@@ -25,12 +25,15 @@ const RoomDetailsTab: NextPage = () => {
   const { id } = useContext(OpenRoomContext);
 
   useEffect(() => {
-    fetch(`/api/get-room-details?id=${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setRoomDetails(data);
-        console.log(data);
-      });
+    (async () => {
+      const res = await fetch(`/api/get-room-details?id=${id}`);
+      if (!res.ok) {
+        return
+      }
+      const data = await res.json();
+      setRoomDetails(data);
+      console.log(data);
+    })();
   }, [id]);
 
   return (
@@ -46,7 +49,7 @@ const RoomDetailsTab: NextPage = () => {
           </tr>
         </thead>
         <tbody>
-          {roomDetails.visitors.map((visitor) => (
+          {roomDetails.visitors?.map((visitor) => (
             <tr>
               <td className="w-1/3 text-center">{visitor.time}</td>
               <td className="w-1/3 text-center">{visitor.ip}</td>

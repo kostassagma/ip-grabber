@@ -1,31 +1,34 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { serialize } from "cookie";
-import { jwtVerify } from "jose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import checkParamPresence from "../../lib/checkParamPresence";
-import { JWT_SECRET_KEY } from "../../lib/constants";
+import { nanoid } from "nanoid";
 import { connectToDatabase } from "../../lib/mongodb";
+import { JWT_SECRET_KEY } from "../../lib/constants";
+import { serialize } from "cookie";
+import { jwtVerify } from "jose";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const [err, {}] = checkParamPresence([], req, res, "GET");
+  const [err, {link}] = checkParamPresence(["link"], req, res, "POST")
   if (err) return;
+  
   const { jit } = req.cookies;
   if (!jit) {
     return res.status(401).send({ Err: "Not Authenticated" });
   }
-  let owner: any = "";
+
+  let owner:any = ""
   try {
     const { payload, protectedHeader } = await jwtVerify(
       jit,
       new TextEncoder().encode(JWT_SECRET_KEY)
     );
     if (!payload.user) {
-      throw new Error();
+      throw new Error()
     }
-    owner = payload.user;
+    owner = payload.user
   } catch (err) {
     res.setHeader(
       "Set-Cookie",
@@ -37,28 +40,30 @@ export default async function handler(
   try {
     let { db } = await connectToDatabase()
 
-    const rooms = await db.collection("rooms").find({owner}).toArray()
+    const id = await getUniqueId()
 
-    return res.status(200).send(JSON.parse(JSON.stringify(rooms)))
+    await db.collection("rooms").insertOne({
+      id,
+      link,
+      owner,
+      visitors: []
+    });
+
+    return res.status(200).json({ id }); 
   } catch(e) {
     return res.status(500).json({Err: "Something Went Wrong"})
   }
-  // res.status(200).json([
-  //   {
-  //     id: "1",
-  //     link: "https://skroutz.gr",
-  //   },
-  //   {
-  //     id: "2",
-  //     link: "https://skroutz.gr",
-  //   },
-  //   {
-  //     id: "3",
-  //     link: "https://skroutz.gr",
-  //   },
-  //   {
-  //     id: "4",
-  //     link: "https://skroutz.gr",
-  //   },
-  // ]);
+}
+
+async function getUniqueId():Promise<string> {
+  let id = nanoid()
+  let {db} = await connectToDatabase()
+
+  const exists = await db.collection("rooms").findOne({ id });
+
+  if (exists) {
+    return await getUniqueId()
+  }
+
+  return id
 }

@@ -29,7 +29,7 @@ export default async function handler(
     if (hashedPassword !== user.password) {
       return res.status(401).json({ Err: "Invalid Password" });
     }
-    const token = await new SignJWT({ user: username })
+    const token = await new SignJWT({ user: user._id })
       .setProtectedHeader({ alg: "HS256" })
       .setJti("ebskhsb")
       .setIssuedAt()

@@ -12,13 +12,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // if (req.method !== "POST") {
-  //   return res.status(405).json({
-  //     Err: "This Route Only Accepts Post Requests",
-  //   });
-  // }
-
-  const [err, { username, password, code }] = checkParamPresence(["username", "password", "code"], req, res, "POST");
+  const [err, { username, password, code }] = checkParamPresence(
+    ["username", "password", "code"],
+    req,
+    res,
+    "POST"
+  );
   if (err) return;
 
   if (code.length !== 6) {
@@ -32,7 +31,7 @@ export default async function handler(
     let invite = await db.collection("invites").findOne({ code });
 
     if (!invite || invite.used) {
-      return res.status(404).send({ "Not Found": "Invite Code Not Found" });
+      return res.status(404).send({ Err: "Invalid Invite" });
     }
     // fetch the posts
     let exists = await db.collection("users").findOne({ username });
@@ -49,7 +48,9 @@ export default async function handler(
       .collection("users")
       .insertOne({ username, password: hashedPassword });
 
-    const token = await new SignJWT({user: username})
+    const user = await db.collection("users").findOne({username})
+
+    const token = await new SignJWT({ user: user._id })
       .setProtectedHeader({ alg: "HS256" })
       .setJti("ebskhsb")
       .setIssuedAt()

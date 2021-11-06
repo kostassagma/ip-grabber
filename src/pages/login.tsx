@@ -3,13 +3,13 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import NProgress from "nprogress";
 
 const Login: NextPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameErr, setUsernameErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,6 +20,7 @@ const Login: NextPage = () => {
     if (!password) {
       return setPasswordErr("Please enter a password");
     }
+    NProgress.start()
     const res = await fetch("/api/login", {
       method: "POST",
       headers: {
@@ -35,8 +36,10 @@ const Login: NextPage = () => {
       } else if (res.status === 401) {
         setPasswordErr(data.Err);
       }
+      NProgress.done()
       return;
     }
+    NProgress.done()
     router.push("/dash");
   };
 
