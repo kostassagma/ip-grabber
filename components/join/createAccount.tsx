@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { ValidCodeContext } from ".";
 import { passwordStrength } from "check-password-strength";
+import { useRouter } from "next/router";
 
 const CreateAccount: NextPage = () => {
   const [invalidUsername, setInvalidUsername] = useState("");
@@ -11,6 +12,7 @@ const CreateAccount: NextPage = () => {
   const [password, setPassword] = useState("");
   const [strenght, setStrenght] = useState(passwordStrength(""));
   const {code} = useContext(ValidCodeContext)
+  const router = useRouter()
 
   const enterCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,10 +37,9 @@ const CreateAccount: NextPage = () => {
       body: JSON.stringify({ username, password, code }),
     });
     if (!res.ok) {
-      setInvalidUsername("Username Taken")
+      return setInvalidUsername("Username Taken")
     }
-    console.log(res.json());
-    
+    router.push("/dash?joined=true")
   };
 
   return (

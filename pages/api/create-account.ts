@@ -3,35 +3,29 @@ import { passwordStrength } from "check-password-strength";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../lib/mongodb";
 import { createHash } from "crypto";
+import { JWT_SECRET_KEY } from "../../lib/constants";
+import { SignJWT } from "jose";
+import { serialize } from "cookie";
+import checkParamPresence from "../../lib/checkParamPresence";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      "Method Not Acccepted": "This Route Only Accepts Post Requests",
-    });
-  }
+  // if (req.method !== "POST") {
+  //   return res.status(405).json({
+  //     Err: "This Route Only Accepts Post Requests",
+  //   });
+  // }
 
-  const { username, password, code } = req.body;
-  if (!username) {
-    return res.status(400).json({ "Bad Request": "Missing Username" });
-  }
-  if (!password) {
-    return res.status(400).json({ "Bad Request": "Missing Password" });
-  }
-  if (!code) {
-    return res.status(400).json({ "Bad Request": "Missing Invitation Code" });
-  }
-  if (!code) {
-    return res.status(400).send({ "Bad Request": "Invite Code Not Provided" });
-  }
+  const [err, { username, password, code }] = checkParamPresence(["username", "password", "code"], req, res, "POST");
+  if (err) return;
+
   if (code.length !== 6) {
-    return res.status(400).json({ "Bad Request": "Code Lenght Isnt 6 digits" });
+    return res.status(400).json({ Err: "Code Lenght Isnt 6 digits" });
   }
   if (passwordStrength(password).id !== 3) {
-    return res.status(400).json({ "Bad Request": "Weak Password" });
+    return res.status(400).json({ Err: "Weak Password" });
   }
   try {
     let { db } = await connectToDatabase();
@@ -44,7 +38,7 @@ export default async function handler(
     let exists = await db.collection("users").findOne({ username });
 
     if (exists) {
-      return res.status(409).send({ Conflict: "Username Taken" });
+      return res.status(409).send({ Err: "Username Taken" });
     }
 
     const hashedPassword = await createHash("sha256")
@@ -55,8 +49,16 @@ export default async function handler(
       .collection("users")
       .insertOne({ username, password: hashedPassword });
 
+    const token = await new SignJWT({user: username})
+      .setProtectedHeader({ alg: "HS256" })
+      .setJti("ebskhsb")
+      .setIssuedAt()
+      .setExpirationTime("2h")
+      .sign(new TextEncoder().encode(JWT_SECRET_KEY));
+
+    res.setHeader("Set-Cookie", serialize("jit", token, { path: "/" }));
     res.status(200).send({ OK: "Created Account" });
   } catch (e) {
-    return res.status(500).json({ Error: "Something Went Wrong" });
+    return res.status(500).json({ Err: "Something Went Wrong" });
   }
 }

@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import NProgress from "nprogress";
 import React, { createContext, FC, useContext, useState } from "react";
 import { ValidCodeContext } from ".";
 
@@ -13,15 +14,17 @@ const InviteCode: NextPage = () => {
     console.log(code);
     if (code.length !== 6) {
       setInvalid(true);
-      return;
+      return
     }
-    const res = await fetch(`/api/valid-code?code=${code}`)
+    NProgress.start()
+    const res = await fetch(`/api/valid-code?code=${code}`);
     if (!res.ok) {
-      setInvalid(true)
-      setValid(false)
-      return;
+      setInvalid(true);
+      setValid(false);
+      return NProgress.done();
     }
-    setValid(true)
+    NProgress.done()
+    setValid(true);
   };
 
   return (
@@ -29,7 +32,7 @@ const InviteCode: NextPage = () => {
       className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       onSubmit={enterCode}
     >
-      <h1 className="font-bold mb-3 text-xl">This app is invitation only!</h1>
+      <h1 className="font-bold mb-4 text-2xl">Create Account</h1>
       <div className="mb-2">
         <label className="block text-gray-700 text-sm font-bold mb-1">
           Invitation Code
@@ -73,4 +76,4 @@ const InviteCode: NextPage = () => {
   );
 };
 
-export default InviteCode
+export default InviteCode;
