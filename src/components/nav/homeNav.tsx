@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const HomeNav: NextPage = () => {
   return (
-    <div className="w-screen bg-gray-50 flex row items-center p-4">
+    <div className="w-full bg-gray-50 flex row items-center p-4">
       <div className="flex-1 text-left">
         <Link href="#" passHref>
           <h1 className="text-3xl font-bold cursor-pointer">Ip Grabber</h1>

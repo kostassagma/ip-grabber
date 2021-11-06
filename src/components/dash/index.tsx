@@ -4,9 +4,14 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import DashNav from "../nav/dashNav";
+import Footer from "../footer";
+import MyRoomsTab from "./myRooms";
+import RoomDetailsTab from "./roomDetails";
+import { useScreenType } from "../../hooks/screenType";
 
 const DashPage: NextPage = () => {
   const router = useRouter();
+  const screenType = useScreenType();
 
   useEffect(() => {
     console.log(router.query);
@@ -15,18 +20,30 @@ const DashPage: NextPage = () => {
     }
   }, [router]);
 
+  if (screenType === "mobile") {
+    return (
+      <div>
+        <div className="min-h-screen flex flex-col">
+          <DashNav />
+          <div className="p-5">
+            <RoomDetailsTab />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
-    <div className="text-center">
-      <DashNav/>
-      <h1 className="font-bold text-7xl ">Ip Grabber</h1>
-      <p className="mt-4">
-        Get insight into hardware used to access your website
-      </p>
-      <Link href="/login" passHref>
-        <button className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Get Started
-        </button>
-      </Link>
+    <div>
+      <div className="min-h-screen flex flex-col">
+        <DashNav />
+        <div className="p-5 grid grid-cols-2 gap-5 min-h-full">
+          <MyRoomsTab />
+          <RoomDetailsTab />
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 };
