@@ -24,6 +24,7 @@ export default function checkParamPresence(
         return [true, {}];
       }
     });
+    return [false, { ...req.query }];
   } else {
     // Checking Body for POST/UPDATE/DELETE requests
     params.map((param) => {
@@ -33,6 +34,6 @@ export default function checkParamPresence(
         return [true, {}];
       }
     });
+    return [false, { ...req.body }];
   }
-  return [false, { ...req.body }];
 }

@@ -13,8 +13,16 @@ const DashNav: NextPage = () => {
         </Link>
       </div>
       <div className="flex row space-x-4">
-        <div className="text-2xl">Hello</div>
-        <div className="text-2xl">Hello</div>
+        <div className="text-2xl hidden sm:block">
+          <Link href="/dash" passHref>
+            Dash
+          </Link>
+        </div>
+        <div className="text-2xl hidden sm:block">
+          <Link href="/dash" passHref>
+            Dash
+          </Link>
+        </div>
         <Link href="/dash/new-room" passHref>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             New Room

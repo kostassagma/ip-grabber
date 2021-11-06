@@ -2,16 +2,29 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
 import DashPage from "../../components/dash";
+import { useScreenType } from "../../hooks/screenType";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import DashMobilePage from "../../components/dash/mobile";
 
-const Dash: NextPage = () => {
+const DashMobile: NextPage = () => {
+  const screenType = useScreenType()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (screenType==="desktop") {
+      router.push("/dash/recent")
+    }
+  }, [screenType])
+
   return (
     <>
       <Head>
         <title>Ip Grabber | Dash</title>
       </Head>
-      <DashPage />
+      <DashMobilePage />
     </>
   );
 };
 
-export default Dash;
+export default DashMobile;
