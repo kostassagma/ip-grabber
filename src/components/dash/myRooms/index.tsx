@@ -27,8 +27,6 @@ const MyRoomsTab: NextPage = () => {
       });
   }, []);
 
-  console.log(myRooms);
-
   const createNewRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newRoom) {
@@ -45,15 +43,15 @@ const MyRoomsTab: NextPage = () => {
     });
     const data = await res.json();
     if (!res.ok) {
-      NProgress.done()
+      NProgress.done();
       return console.warn(data);
     }
-    let currentRooms = myRooms
+    let currentRooms = myRooms;
     currentRooms.push({
       id: data.id,
-      link: newRoom
-    })
-    setMyRooms(currentRooms)
+      link: newRoom,
+    });
+    setMyRooms(currentRooms);
     router.push(`/dash/${data.id}`);
   };
 

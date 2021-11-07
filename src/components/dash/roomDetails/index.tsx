@@ -49,8 +49,8 @@ const RoomDetailsTab: NextPage = () => {
           </tr>
         </thead>
         <tbody>
-          {roomDetails.visitors?.map((visitor) => (
-            <tr>
+          {roomDetails.visitors?.map((visitor, i) => (
+            <tr key={i}>
               <td className="w-1/3 text-center">{visitor.time}</td>
               <td className="w-1/3 text-center">{visitor.ip}</td>
               <td className="w-1/3 text-center">...</td>

@@ -15,7 +15,7 @@ const DashMobile: NextPage = () => {
     if (screenType==="desktop") {
       router.push("/dash/recent")
     }
-  }, [screenType])
+  }, [screenType, router])
 
   return (
     <>
