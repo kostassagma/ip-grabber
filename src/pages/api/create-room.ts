@@ -6,6 +6,7 @@ import { connectToDatabase } from "../../lib/mongodb";
 import { JWT_SECRET_KEY } from "../../lib/constants";
 import { serialize } from "cookie";
 import { jwtVerify } from "jose";
+import { urlToPath } from "../../lib/checkValidUrl";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,6 +38,12 @@ export default async function handler(
     return res.status(401).send({ Err: "Not Authenticated" });
   }
 
+  const linkDets = urlToPath(link)
+
+  if (!linkDets) {
+    return res.status(400).json({Err: "Invalid Link"})
+  }
+
   try {
     let { db } = await connectToDatabase()
 
@@ -45,6 +52,7 @@ export default async function handler(
     await db.collection("rooms").insertOne({
       id,
       link,
+      origin: linkDets.hostname,
       owner,
       visitors: []
     });

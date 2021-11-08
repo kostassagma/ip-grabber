@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 interface Rooms {
   link: string;
   id: string;
+  origin: string;
 }
 
 const MyRoomsTab: NextPage = () => {
@@ -50,6 +51,7 @@ const MyRoomsTab: NextPage = () => {
     currentRooms.push({
       id: data.id,
       link: newRoom,
+      origin: data.origin
     });
     setMyRooms(currentRooms);
     router.push(`/dash/${data.id}`);
@@ -59,7 +61,7 @@ const MyRoomsTab: NextPage = () => {
     <div className="rounded-md shadow-md p-5 w-full min-h-full flex flex-col">
       <h1 className="text-3xl font-bold">My Rooms</h1>
       {myRooms.map((e) => (
-        <Room key={e.id} link={e.link} id={e.id} />
+        <Room key={e.id} link={e.link} id={e.id} origin={e.origin} />
       ))}
       <form
         className="rounded space-x-2 flex flex-row mt-3"
