@@ -13,6 +13,7 @@ interface Visitors {
 interface Room {
   link: string;
   id: string;
+  origin: string;
   visitors: Visitors[];
 }
 
@@ -20,6 +21,7 @@ const RoomDetailsTab: NextPage = () => {
   const [roomDetails, setRoomDetails] = useState<Room>({
     link: "",
     id: "",
+    origin: "",
     visitors: [],
   });
   const { id } = useContext(OpenRoomContext);
@@ -38,7 +40,8 @@ const RoomDetailsTab: NextPage = () => {
 
   return (
     <div className="rounded-md shadow-md p-5 w-full">
-      <h1 className="text-3xl font-bold">{roomDetails.link}</h1>
+      <h1 className="text-3xl font-bold">{roomDetails.origin}</h1>
+      <p>{roomDetails.link}</p>
       {/* <h2>Visitors:</h2> */}
       <table className="table-auto w-full mt-2">
         <thead>

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import NProgress from "nprogress";
 import Room from "./room";
 import { useRouter } from "next/router";
+import { urlToPath } from "../../../lib/checkValidUrl";
 
 interface Rooms {
   link: string;
@@ -16,6 +17,7 @@ interface Rooms {
 const MyRoomsTab: NextPage = () => {
   const [myRooms, setMyRooms] = useState<Rooms[]>([]);
   const [newRoom, setNewRoom] = useState("");
+  const [newRoomErr, setNewRoomErr] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -23,15 +25,40 @@ const MyRoomsTab: NextPage = () => {
     fetch("/api/get-my-rooms")
       .then((res) => res.json())
       .then((data) => {
-        setMyRooms(data);
+        if (data) {
+          setMyRooms(data);
+        }
         NProgress.done();
       });
   }, []);
 
+  const removeRoom = (id:string) => {
+    let currentRooms = myRooms
+    let indexOfRoom = null
+    let count = 0
+    for (let i of currentRooms) {
+      if (i.id==id) {
+        indexOfRoom = count
+      }
+      count ++
+    }
+    
+    if (indexOfRoom===null) {
+      return
+    }
+    currentRooms.splice(indexOfRoom, 1)
+
+    return setMyRooms([...currentRooms])
+  }
+
   const createNewRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newRoom) {
-      return console.warn("please input a link");
+      return setNewRoomErr("Please enter a link");
+    }
+    const a = urlToPath(newRoom);
+    if (!a) {
+      return setNewRoomErr("Enter a valid link");
     }
     NProgress.start();
     const res = await fetch("/api/create-room", {
@@ -51,17 +78,18 @@ const MyRoomsTab: NextPage = () => {
     currentRooms.push({
       id: data.id,
       link: newRoom,
-      origin: data.origin
+      origin: a.hostname,
     });
     setMyRooms(currentRooms);
+    setNewRoom("");
     router.push(`/dash/${data.id}`);
   };
 
   return (
     <div className="rounded-md shadow-md p-5 w-full min-h-full flex flex-col">
-      <h1 className="text-3xl font-bold">My Rooms</h1>
+      <h1 className="text-3xl font-bold mb-1">My Rooms</h1>
       {myRooms.map((e) => (
-        <Room key={e.id} link={e.link} id={e.id} origin={e.origin} />
+        <Room key={e.id} link={e.link} id={e.id} origin={e.origin} removeRoom={removeRoom} />
       ))}
       <form
         className="rounded space-x-2 flex flex-row mt-3"
@@ -69,11 +97,17 @@ const MyRoomsTab: NextPage = () => {
       >
         <div className="flex-1">
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={newRoom}
+            className={`shadow appearance-none border ${
+              newRoomErr ? "border-red-500" : ""
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="link"
             type="text"
             placeholder="Link"
-            onChange={(e) => setNewRoom(e.target.value)}
+            onChange={(e) => {
+              setNewRoom(e.target.value);
+              setNewRoomErr("");
+            }}
           />
         </div>
         <div>
@@ -85,6 +119,7 @@ const MyRoomsTab: NextPage = () => {
           </button>
         </div>
       </form>
+      <p className="text-red-500 text-xs italic">{newRoomErr}</p>
     </div>
   );
 };

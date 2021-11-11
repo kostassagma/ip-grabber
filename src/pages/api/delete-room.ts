@@ -10,7 +10,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const [err, { id }] = checkParamPresence(["id"], req, res, "GET");
+  // console.log(JSON.parse(req.body).id);
+  req.body = JSON.parse(req.body)
+  
+  const [err, { id }] = checkParamPresence(["id"], req, res, "DELETE");
   if (err) return;
 
   const { jit } = req.cookies;
@@ -36,17 +39,19 @@ export default async function handler(
   }
 
   try {
-    let { db } = await connectToDatabase()
+    let { db } = await connectToDatabase();
 
-    const room = await db.collection("rooms").findOne({owner, id})
+    const room = await db.collection("rooms").findOne({ owner, id });
 
     if (!room) {
-      return res.status(404).json({Err: "Room Not Found"})
+      return res.status(404).json({ Err: "Room Not Found" });
     }
 
-    return res.status(200).send(room)
-  } catch(e) {
-    return res.status(500).json({Err: "Something Went Wrong"})
+    await db.collection("rooms").deleteOne({ id });
+
+    return res.status(200).send({ OK: "Room deleted" });
+  } catch (e) {
+    return res.status(500).json({ Err: "Something Went Wrong" });
   }
 
   // return res.status(200).json({

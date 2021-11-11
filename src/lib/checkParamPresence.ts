@@ -6,7 +6,7 @@ export default function checkParamPresence(
   params: string[],
   req: NextApiRequest,
   res: NextApiResponse,
-  method: "GET" | "POST"
+  method: "GET" | "POST" | "DELETE"
 ): response {
   // Checking If Method Is Acceptable
   if (req.method !== method) {
