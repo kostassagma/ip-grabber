@@ -1,9 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import requestIp from 'request-ip'
+import requestIp from "request-ip";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const detectedIp = requestIp.getClientIp(req)
+  const ip = requestIp.getClientIp(req);
+  // var forwardedIpsStr = req.rawHeaders['x-forwarded-for'];
 
-  res.status(200).json({ detectedIp  });
+  res.status(200).json({ ip });
 }
