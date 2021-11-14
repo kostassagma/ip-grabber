@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import JoinPage from "../components/join";
+import JoinPage from "../../components/join";
 import Head from "next/head";
 
 const Join: NextPage = () => {
