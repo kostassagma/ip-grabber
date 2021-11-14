@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import Head from "next/head";
-import DashPage from "../../components/dash";
 import { useScreenType } from "../../hooks/screenType";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
+import { API } from "../../lib/constants";
 
 const Login: NextPage = () => {
   const [username, setUsername] = useState("");
@@ -21,7 +22,7 @@ const Login: NextPage = () => {
       return setPasswordErr("Please enter a password");
     }
     NProgress.start()
-    const res = await fetch("/api/login", {
+    const res = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",

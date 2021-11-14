@@ -1,13 +1,10 @@
 import type { NextPage } from "next";
-import Link from "next/link";
-import DashNav from "../../nav/dashNav";
-import Footer from "../../footer";
 import { useEffect, useState } from "react";
 import NProgress from "nprogress";
 import Room from "./room";
 import { useRouter } from "next/router";
 import { urlToPath } from "../../../lib/checkValidUrl";
-import { useScreenType } from "../../../hooks/screenType";
+import { API } from "../../../lib/constants";
 
 interface Rooms {
   link: string;
@@ -16,7 +13,6 @@ interface Rooms {
 }
 
 const MyRoomsTab: NextPage = () => {
-  const screenType = useScreenType()
   const [myRooms, setMyRooms] = useState<Rooms[]>([]);
   const [newRoom, setNewRoom] = useState("");
   const [newRoomErr, setNewRoomErr] = useState("");
@@ -24,7 +20,7 @@ const MyRoomsTab: NextPage = () => {
 
   useEffect(() => {
     NProgress.start();
-    fetch("/api/get-my-rooms")
+    fetch(`${API}/rooms/get-my-rooms`)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
@@ -63,7 +59,7 @@ const MyRoomsTab: NextPage = () => {
       return setNewRoomErr("Enter a valid link");
     }
     NProgress.start();
-    const res = await fetch("/api/create-room", {
+    const res = await fetch(`${API}/rooms/create-room`, {
       method: "POST",
       headers: {
         Accept: "application/json",

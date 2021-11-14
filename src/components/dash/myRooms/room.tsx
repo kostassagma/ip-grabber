@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { OpenRoomContext } from "..";
-import TrashCan from "./trash-solid.svg";
+import { API } from "../../../lib/constants";
 
 interface Props {
   link: string;
@@ -17,7 +17,7 @@ const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
   const router = useRouter();
 
   const deleteRoom = async () => {
-    const res = await fetch("/api/delete-room", {
+    const res = await fetch(`${API}/rooms/delete-room`, {
       method: "DELETE",
       body: JSON.stringify({ id }),
     });

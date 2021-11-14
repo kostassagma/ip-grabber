@@ -11,7 +11,6 @@ import { useScreenType } from "../../hooks/screenType";
 
 const DashMobilePage: NextPage = () => {
   const router = useRouter();
-  const screenType = useScreenType();
 
   useEffect(() => {
     console.log(router.query);

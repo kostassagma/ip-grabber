@@ -2,10 +2,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { serialize } from "cookie";
 import { SignJWT } from "jose";
-import { JWT_SECRET_KEY } from "../../lib/constants";
+import { JWT_SECRET_KEY } from "../../../../lib/constants";
 import { createHash } from "crypto";
-import { connectToDatabase } from "../../lib/mongodb";
-import checkParamPresence from "../../lib/checkParamPresence";
+import { connectToDatabase } from "../../../../lib/mongodb";
+import checkParamPresence from "../../../../lib/checkParamPresence";
 
 export default async function handler(
   req: NextApiRequest,

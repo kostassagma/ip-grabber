@@ -22,9 +22,6 @@ const DashPage: NextPage = () => {
 
   useEffect(() => {
     const {room} = router.query
-    // if (router.query.ca) {
-    //   toast("Created Account");
-    // }
     if (room) {
       setRoomOpened(typeof(room)=="string"?room:room[0])
     }

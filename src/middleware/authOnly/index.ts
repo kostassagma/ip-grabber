@@ -6,9 +6,9 @@ import { JWT_SECRET_KEY } from "../../lib/constants";
 import getJWTKey from "../../lib/getJWTKey";
 
 export default async function CheckForAuth(req: NextRequest) {
-  console.log("HEllo World");
+  // console.log("HEllo World");
   const jit = req.cookies["jit"];
-  console.log(jit);
+  // console.log(jit);
 
   if (!jit) {
     throw new Error()

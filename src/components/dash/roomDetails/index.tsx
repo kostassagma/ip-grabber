@@ -1,9 +1,7 @@
 import type { NextPage } from "next";
-import Link from "next/link";
-import DashNav from "../../nav/dashNav";
-import Footer from "../../footer";
 import { useContext, useEffect, useState } from "react";
 import { OpenRoomContext } from "..";
+import { API } from "../../../lib/constants";
 
 interface Visitors {
   ip: string;
@@ -28,7 +26,7 @@ const RoomDetailsTab: NextPage = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`/api/get-room-details?id=${id}`);
+      const res = await fetch(`${API}/rooms/get-room-details?id=${id}`);
       if (!res.ok) {
         return
       }

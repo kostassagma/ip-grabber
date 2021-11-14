@@ -2,9 +2,9 @@
 import { serialize } from "cookie";
 import { jwtVerify } from "jose";
 import type { NextApiRequest, NextApiResponse } from "next";
-import checkParamPresence from "../../lib/checkParamPresence";
-import { JWT_SECRET_KEY } from "../../lib/constants";
-import { connectToDatabase } from "../../lib/mongodb";
+import checkParamPresence from "../../../../lib/checkParamPresence";
+import { JWT_SECRET_KEY } from "../../../../lib/constants";
+import { connectToDatabase } from "../../../../lib/mongodb";
 
 export default async function handler(
   req: NextApiRequest,

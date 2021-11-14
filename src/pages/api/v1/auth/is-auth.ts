@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import checkParamPresence from "../../lib/checkParamPresence";
+import checkParamPresence from "../../../../lib/checkParamPresence";
 import { jwtVerify } from "jose";
-import { JWT_SECRET_KEY } from "../../lib/constants";
+import { JWT_SECRET_KEY } from "../../../../lib/constants";
 import { serialize } from "cookie";
 
 export default async function handler(

@@ -4,12 +4,13 @@ import Head from "next/head";
 import HomeNav from "../components/nav/homeNav";
 import Footer from "../components/footer";
 import { useEffect, useState } from "react";
+import { API } from "../lib/constants";
 
 const Try: NextPage = () => {
   const [myIp, setMyIp] = useState("loading...");
 
   useEffect(() => {
-    fetch("/api/get-device-info")
+    fetch(`${API}/get-device-info`)
       .then((res) => res.json())
       .then((data) => setMyIp(data.ip!));
   }, []);

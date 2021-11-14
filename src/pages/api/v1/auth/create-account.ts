@@ -1,12 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { passwordStrength } from "check-password-strength";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../lib/mongodb";
+import { connectToDatabase } from "../../../../lib/mongodb";
 import { createHash } from "crypto";
-import { JWT_SECRET_KEY } from "../../lib/constants";
+import { JWT_SECRET_KEY } from "../../../../lib/constants";
 import { SignJWT } from "jose";
 import { serialize } from "cookie";
-import checkParamPresence from "../../lib/checkParamPresence";
+import checkParamPresence from "../../../../lib/checkParamPresence";
 
 export default async function handler(
   req: NextApiRequest,

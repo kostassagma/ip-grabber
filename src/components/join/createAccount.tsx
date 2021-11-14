@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import { ValidCodeContext } from ".";
 import { passwordStrength } from "check-password-strength";
 import { useRouter } from "next/router";
+import { API } from "../../lib/constants";
 
 const CreateAccount: NextPage = () => {
   const [invalidUsername, setInvalidUsername] = useState("");
@@ -28,7 +29,7 @@ const CreateAccount: NextPage = () => {
       return setInvalidPassword(true);
     }
 
-    const res = await fetch("/api/create-account", {
+    const res = await fetch(`${API}/auth/create-account`, {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import NProgress from "nprogress";
 import React, { createContext, FC, useContext, useState } from "react";
 import { ValidCodeContext } from ".";
+import { API } from "../../lib/constants";
 
 const InviteCode: NextPage = () => {
   // const [code, setCode] = useState("");
@@ -17,7 +18,7 @@ const InviteCode: NextPage = () => {
       return
     }
     NProgress.start()
-    const res = await fetch(`/api/valid-code?code=${code}`);
+    const res = await fetch(`${API}/auth/valid-code?code=${code}`);
     if (!res.ok) {
       setInvalid(true);
       setValid(false);
