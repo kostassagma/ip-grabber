@@ -39,7 +39,7 @@ const RoomDetailsTab: NextPage = () => {
   }, [id]);
 
   return (
-    <div className="rounded-md shadow-md p-5 w-full">
+    <div className="rounded-md shadow-md p-5 h-full w-full">
       <h1 className="text-3xl font-bold">{roomDetails.origin}</h1>
       <p>{roomDetails.link}</p>
       {/* <h2>Visitors:</h2> */}

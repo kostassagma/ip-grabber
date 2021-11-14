@@ -18,7 +18,7 @@ const Home: NextPage = () => {
               <p className="mt-4">
                 Get an insight into what hardware used to access your website
               </p>
-              <Link href="/login" passHref>
+              <Link href="/dash" passHref>
                 <button className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   Get Started
                 </button>

@@ -14,18 +14,18 @@ const HomeNav: NextPage = () => {
       </div>
       <div className="flex row space-x-4">
         <div className="text-2xl hidden sm:block">
-          <Link href="/dash" passHref>
-            Dash
+          <Link href="/try" passHref>
+            Try
           </Link>
         </div>
         <div className="text-2xl hidden sm:block">
-          <Link href="/my-ip" passHref>
-            MyIp
+          <Link href="/login" passHref>
+            Login
           </Link>
         </div>
-        <Link href="/dash/new-room" passHref>
+        <Link href="/join" passHref>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Get Started
+            Join
           </button>
         </Link>
       </div>

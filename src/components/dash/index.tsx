@@ -32,9 +32,9 @@ const DashPage: NextPage = () => {
 
   return (
     <OpenRoomContext.Provider value={{id:roomOpened}}>
-      <div className="min-h-screen flex flex-col">
+      <div className="h-screen flex flex-col">
         <DashNav />
-        <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-5 min-h-full">
+        <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-5 h-full">
           {screenType === "mobile" && (
             <Link href="/dash" passHref>
               <a className="inline-block font-bold text-blue-500 hover:text-blue-800">
@@ -42,7 +42,7 @@ const DashPage: NextPage = () => {
               </a>
             </Link>
           )}
-          {screenType === "desktop" && <MyRoomsTab />}
+          {screenType==="desktop"&&<MyRoomsTab />}
           <RoomDetailsTab />
         </div>
       </div>

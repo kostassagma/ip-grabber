@@ -7,6 +7,7 @@ import NProgress from "nprogress";
 import Room from "./room";
 import { useRouter } from "next/router";
 import { urlToPath } from "../../../lib/checkValidUrl";
+import { useScreenType } from "../../../hooks/screenType";
 
 interface Rooms {
   link: string;
@@ -15,10 +16,11 @@ interface Rooms {
 }
 
 const MyRoomsTab: NextPage = () => {
+  const screenType = useScreenType()
   const [myRooms, setMyRooms] = useState<Rooms[]>([]);
   const [newRoom, setNewRoom] = useState("");
   const [newRoomErr, setNewRoomErr] = useState("");
-  const router = useRouter();
+  const router = useRouter();  
 
   useEffect(() => {
     NProgress.start();
@@ -32,24 +34,24 @@ const MyRoomsTab: NextPage = () => {
       });
   }, []);
 
-  const removeRoom = (id:string) => {
-    let currentRooms = myRooms
-    let indexOfRoom = null
-    let count = 0
+  const removeRoom = (id: string) => {
+    let currentRooms = myRooms;
+    let indexOfRoom = null;
+    let count = 0;
     for (let i of currentRooms) {
-      if (i.id==id) {
-        indexOfRoom = count
+      if (i.id == id) {
+        indexOfRoom = count;
       }
-      count ++
+      count++;
     }
-    
-    if (indexOfRoom===null) {
-      return
-    }
-    currentRooms.splice(indexOfRoom, 1)
 
-    return setMyRooms([...currentRooms])
-  }
+    if (indexOfRoom === null) {
+      return;
+    }
+    currentRooms.splice(indexOfRoom, 1);
+
+    return setMyRooms([...currentRooms]);
+  };
 
   const createNewRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,11 +88,19 @@ const MyRoomsTab: NextPage = () => {
   };
 
   return (
-    <div className="rounded-md shadow-md p-5 w-full min-h-full flex flex-col">
+    <div style={{maxHeight: "inherit"}} className="rounded-md shadow-md p-5 w-full h-full flex flex-col">
       <h1 className="text-3xl font-bold mb-1">My Rooms</h1>
-      {myRooms.map((e) => (
-        <Room key={e.id} link={e.link} id={e.id} origin={e.origin} removeRoom={removeRoom} />
-      ))}
+      <div className="h-full overflow-y-scroll">
+        {myRooms.map((e) => (
+          <Room
+            key={e.id}
+            link={e.link}
+            id={e.id}
+            origin={e.origin}
+            removeRoom={removeRoom}
+          />
+        ))}
+      </div>
       <form
         className="rounded space-x-2 flex flex-row mt-3"
         onSubmit={createNewRoom}
