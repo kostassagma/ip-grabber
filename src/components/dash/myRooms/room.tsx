@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { OpenRoomContext } from "..";
-import { API } from "../../../lib/constants";
+import { API, REDIRECT } from "../../../lib/constants";
 
 interface Props {
   link: string;
@@ -33,7 +33,7 @@ const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
   };
   const copyRoomLink = async () => {
     const elem = document.createElement("textarea");
-    elem.value = `localhost:3000/l/${id}`;
+    elem.value = `${REDIRECT}/${id}`;
     document.body.appendChild(elem);
     elem.select();
     document.execCommand("copy");
