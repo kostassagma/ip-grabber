@@ -26,10 +26,18 @@ const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
     if (!res.ok) {
       return;
     }
-    removeRoom(id)
+    removeRoom(id);
     if (openedRoom.id === id) {
       router.push("/dash/recent");
     }
+  };
+  const copyRoomLink = async () => {
+    const elem = document.createElement("textarea");
+    elem.value = `localhost:3000/l/${id}`;
+    document.body.appendChild(elem);
+    elem.select();
+    document.execCommand("copy");
+    document.body.removeChild(elem);
   };
 
   return (
@@ -37,10 +45,7 @@ const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
       {openedRoom.id === id && (
         <div className="absolute left-0 top-1.5 h-12 w-1 bg-blue-500 rounded-r-md" />
       )}
-      <div
-        className="h-full absolute right-0 top-0 p-4 flex flex-row space-x-3 group-hover:bg-gray-100"
-        onClick={deleteRoom}
-      >
+      <div className="h-full absolute right-0 top-0 p-4 flex flex-row space-x-3 group-hover:bg-gray-100">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -51,6 +56,7 @@ const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
           color="#777"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
+          onClick={copyRoomLink}
         >
           <path
             fill="currentColor"
@@ -67,6 +73,7 @@ const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
           color="#777"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
+          onClick={deleteRoom}
         >
           <path
             fill="currentColor"

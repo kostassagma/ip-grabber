@@ -32,7 +32,6 @@ const RoomDetailsTab: NextPage = () => {
       }
       const data = await res.json();
       setRoomDetails(data);
-      console.log(data);
     })();
   }, [id]);
 
