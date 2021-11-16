@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
@@ -13,6 +13,14 @@ const Login: NextPage = () => {
   const [passwordErr, setPasswordErr] = useState("");
   const router = useRouter();
 
+  useEffect(() => {
+    if (router.query.remove !== undefined) {
+      fetch(`${API}/auth/remove-cookie`, {
+        method: "POST",
+      });
+    }
+  }, [router]);
+
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!username) {
@@ -21,7 +29,7 @@ const Login: NextPage = () => {
     if (!password) {
       return setPasswordErr("Please enter a password");
     }
-    NProgress.start()
+    NProgress.start();
     const res = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: {
@@ -37,10 +45,10 @@ const Login: NextPage = () => {
       } else if (res.status === 401) {
         setPasswordErr(data.Err);
       }
-      NProgress.done()
+      NProgress.done();
       return;
     }
-    NProgress.done()
+    NProgress.done();
     router.push("/dash");
   };
 
@@ -107,7 +115,9 @@ const Login: NextPage = () => {
                 Sign In
               </button>
               <Link href="/" passHref>
-                <a className="font-bold text-blue-500 hover:text-blue-800 inline-block">Cancel</a>
+                <a className="font-bold text-blue-500 hover:text-blue-800 inline-block">
+                  Cancel
+                </a>
               </Link>
             </div>
             <p className="text-xs">
