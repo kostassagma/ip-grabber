@@ -11,5 +11,5 @@ export default async function handler(
   const [err] = checkParamPresence([], req, res, "POST");
   if (err) return
   res.setHeader("Set-Cookie", serialize("jit", "", { maxAge: -1, path: "/" }));
-  res.status(200).send({ OK: "Logged In" });
+  res.status(200).send({ OK: "Logged Out" });
 }
