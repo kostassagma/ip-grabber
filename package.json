@@ -1,8 +1,0 @@
-{
-  "name": "ip-grabber",
-  "version": "1.0.0",
-  "license": "MIT",
-  "engines": {
-    "node": "16.11.1"
-  }
-}
