@@ -17,10 +17,13 @@ const Login: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.query.remove !== undefined) {
-      fetch(`${API}/auth/remove-cookie`, {
-        method: "POST",
-      });
+    if (router.query.next !== undefined) {
+      localStorage.setItem(
+        "nextUrl",
+        typeof router.query.next === "string"
+          ? router.query.next
+          : router.query.next[0]
+      );
     }
   }, [router]);
 
@@ -53,7 +56,8 @@ const Login: NextPage = () => {
     }
     setAccessToken(data.accessToken!);
     NProgress.done();
-    router.push("/dash");
+    const nextUrl = localStorage.getItem("nextUrl")
+    router.push(nextUrl?nextUrl:"/dash");
   };
 
   return (

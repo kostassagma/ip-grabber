@@ -47,7 +47,8 @@ const CreateAccount: NextPage = () => {
       return setInvalidUsername("Username Taken");
     }
     setAccessToken(data.accessToken);
-    router.push("/dash?joined=true");
+    const nextUrl = localStorage.getItem("nextUrl")
+    router.push(nextUrl?nextUrl:"/dash");
   };
 
   return (
