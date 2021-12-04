@@ -20,7 +20,7 @@ const HomeNav: NextPage = () => {
             Login
           </Link>
         </div>
-        <Link href="/join" passHref>
+        <Link href="/login/join" passHref>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Join
           </button>
