@@ -1,10 +1,11 @@
-import "../styles/globals.css"
+import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import NProgress from "nprogress";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import AuthProvider from "../modules/authProvider";
+import { useEffect } from "react";
 
 Router.events.on("routeChangeStart", () => {
   NProgress.start();
@@ -13,9 +14,15 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }: AppProps) {
-//   useEffect(() => {
-//     console.log(`token->"${getAccessToken}"`);
-//   })
+  const router = useRouter();
+
+  useEffect(() => {
+    let toastText = sessionStorage.getItem("toast")
+    if (toastText) {
+      toast(toastText);
+      sessionStorage.setItem("toast", "")
+    }
+  });
 
   return (
     <AuthProvider>
@@ -28,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <Component {...pageProps} />
-      <Toaster />
+      <Toaster position="bottom-center"/>
     </AuthProvider>
   );
 }

@@ -57,6 +57,7 @@ const Login: NextPage = () => {
     setAccessToken(data.accessToken!);
     NProgress.done();
     const nextUrl = localStorage.getItem("nextUrl")
+    sessionStorage.setItem("toast", "Logged In")
     router.push(nextUrl?nextUrl:"/dash");
   };
 

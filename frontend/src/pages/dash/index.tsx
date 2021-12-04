@@ -8,14 +8,14 @@ import AuthOnly from "../../modules/authOnly";
 import AuthProvider from "../../modules/authProvider";
 
 const DashMobile: NextPage = () => {
-  const screenType = useScreenType()
-  const router = useRouter()
+  const screenType = useScreenType();
+  const router = useRouter();
 
   useEffect(() => {
-    if (screenType==="desktop") {
-      router.push("/dash/recent")
+    if (screenType === "desktop") {
+      router.push("/dash/recent");
     }
-  }, [screenType, router])
+  }, [screenType, router]);
 
   return (
     <AuthOnly>
