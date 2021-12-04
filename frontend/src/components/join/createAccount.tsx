@@ -5,14 +5,17 @@ import { ValidCodeContext } from ".";
 import { passwordStrength } from "check-password-strength";
 import { useRouter } from "next/router";
 import { API } from "../../lib/constants";
+import { AuthContext } from "../../modules/authProvider";
 
 const CreateAccount: NextPage = () => {
   const [invalidUsername, setInvalidUsername] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [username, setUsername] = useState("");
   const [invalidPassword, setInvalidPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [strenght, setStrenght] = useState(passwordStrength(""));
   const { code } = useContext(ValidCodeContext);
+  const { setAccessToken } = useContext(AuthContext);
   const router = useRouter();
 
   const enterCode = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,12 +38,15 @@ const CreateAccount: NextPage = () => {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password, code }),
+      body: JSON.stringify({ username, password, code, rememberMe }),
     });
+    const data = await res.json();
 
     if (!res.ok) {
+      console.warn(data.Err);
       return setInvalidUsername("Username Taken");
     }
+    setAccessToken(data.accessToken);
     router.push("/dash?joined=true");
   };
 
@@ -124,6 +130,19 @@ const CreateAccount: NextPage = () => {
         >
           Your password is {strenght.value}
         </p>
+      </div>
+      <div className="mb-2">
+        <label className="inline-flex items-center">
+          <input
+            type="checkbox"
+            className="form-checkbox"
+            checked={rememberMe}
+            onChange={(e) => {
+              setRememberMe(!rememberMe);
+            }}
+          />
+          <span className="ml-2 text-xs">Remember me</span>
+        </label>
       </div>
       <div className="mb-2">
         <button

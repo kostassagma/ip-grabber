@@ -13,6 +13,7 @@ const Login: NextPage = () => {
   const [usernameErr, setUsernameErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const { setAccessToken } = useContext(AuthContext);
+  const [rememberMe, setRememberMe] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const Login: NextPage = () => {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, rememberMe }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -108,6 +109,19 @@ const Login: NextPage = () => {
               {passwordErr && (
                 <p className="text-red-500 text-xs italic">{passwordErr}</p>
               )}
+            </div>
+            <div className="mb-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => {
+                    setRememberMe(!rememberMe);
+                  }}
+                />
+                <span className="ml-2 text-xs">Remember me</span>
+              </label>
             </div>
             {/* Submit */}
             <div className="flex items-center justify-between mb-2">

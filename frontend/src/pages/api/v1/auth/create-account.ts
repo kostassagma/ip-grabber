@@ -19,6 +19,7 @@ export default async function handler(
     "POST"
   );
   if (err) return;
+  const rememberMe = req.body.rememberMe;
 
   if (code.length !== 6) {
     return res.status(400).json({ Err: "Code Lenght Isnt 6 digits" });
@@ -47,6 +48,13 @@ export default async function handler(
       .collection("users")
       .insertOne({ username, password: hashedPassword, tokenVersion: 0 });
 
+    await db.collection("invites").updateOne(
+      {
+        code,
+      },
+      { $set: { used: true } }
+    );
+
     const user = await db.collection("users").findOne({ username });
 
     const token = await new SignJWT({ user: user._id })
@@ -56,23 +64,24 @@ export default async function handler(
       .setExpirationTime("2h")
       .sign(new TextEncoder().encode(JWT_SECRET_KEY));
 
-    const refreshToken = await new SignJWT({
-      user: user._id,
-      version: user.tokenVersion,
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setJti("ebskhsb")
-      .setIssuedAt()
-      .setExpirationTime("2d")
-      .sign(new TextEncoder().encode(REFRESH_TOKEN_KEY));
-
-    res.setHeader(
-      "Set-Cookie",
-      serialize("refresh", refreshToken, {
-        path: "/",
+    if (rememberMe) {
+      const refreshToken = await new SignJWT({
+        user: user._id,
+        version: user.tokenVersion,
       })
-    );
+        .setProtectedHeader({ alg: "HS256" })
+        .setJti("ebskhsb")
+        .setIssuedAt()
+        .setExpirationTime("2d")
+        .sign(new TextEncoder().encode(REFRESH_TOKEN_KEY));
 
+      res.setHeader(
+        "Set-Cookie",
+        serialize("refresh", refreshToken, {
+          path: "/",
+        })
+      );
+    }
     res.status(200).send({ accessToken: token });
   } catch (e) {
     return res.status(500).json({ Err: "Something Went Wrong" });

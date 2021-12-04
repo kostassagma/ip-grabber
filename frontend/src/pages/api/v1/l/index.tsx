@@ -2,12 +2,14 @@
 import { time } from "console";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../../lib/mongodb";
+import requestIp from "request-ip";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id, ip } = req.query;
+  const { id } = req.query;
+  const ip = requestIp.getClientIp(req);
   if (!id || !ip) {
     return res.redirect("/");
   }
