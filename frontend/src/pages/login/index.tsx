@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
 import { API } from "../../lib/constants";
+import { AuthContext } from "../../modules/authProvider";
 
 const Login: NextPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameErr, setUsernameErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
+  const { setAccessToken } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const Login: NextPage = () => {
       NProgress.done();
       return;
     }
+    setAccessToken(data.accessToken!);
     NProgress.done();
     router.push("/dash");
   };

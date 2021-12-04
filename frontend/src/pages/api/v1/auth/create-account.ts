@@ -3,10 +3,10 @@ import { passwordStrength } from "check-password-strength";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../../lib/mongodb";
 import { createHash } from "crypto";
-import { JWT_SECRET_KEY } from "../../../../lib/constants";
+import { JWT_SECRET_KEY, REFRESH_TOKEN_KEY } from "../../../../lib/constants";
 import { SignJWT } from "jose";
-import { serialize } from "cookie";
 import checkParamPresence from "../../../../lib/checkParamPresence";
+import { serialize } from "cookie";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,7 +33,6 @@ export default async function handler(
     if (!invite || invite.used) {
       return res.status(404).send({ Err: "Invalid Invite" });
     }
-    // fetch the posts
     let exists = await db.collection("users").findOne({ username });
 
     if (exists) {
@@ -46,9 +45,9 @@ export default async function handler(
 
     await db
       .collection("users")
-      .insertOne({ username, password: hashedPassword });
+      .insertOne({ username, password: hashedPassword, tokenVersion: 0 });
 
-    const user = await db.collection("users").findOne({username})
+    const user = await db.collection("users").findOne({ username });
 
     const token = await new SignJWT({ user: user._id })
       .setProtectedHeader({ alg: "HS256" })
@@ -57,8 +56,24 @@ export default async function handler(
       .setExpirationTime("2h")
       .sign(new TextEncoder().encode(JWT_SECRET_KEY));
 
-    res.setHeader("Set-Cookie", serialize("jit", token, { path: "/" }));
-    res.status(200).send({ OK: "Created Account" });
+    const refreshToken = await new SignJWT({
+      user: user._id,
+      version: user.tokenVersion,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setJti("ebskhsb")
+      .setIssuedAt()
+      .setExpirationTime("2d")
+      .sign(new TextEncoder().encode(REFRESH_TOKEN_KEY));
+
+    res.setHeader(
+      "Set-Cookie",
+      serialize("refresh", refreshToken, {
+        path: "/",
+      })
+    );
+
+    res.status(200).send({ accessToken: token });
   } catch (e) {
     return res.status(500).json({ Err: "Something Went Wrong" });
   }

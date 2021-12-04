@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import checkParamPresence from "../../../../lib/checkParamPresence";
 import { jwtVerify } from "jose";
 import { JWT_SECRET_KEY } from "../../../../lib/constants";
-import { serialize } from "cookie";
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,10 +24,6 @@ export default async function handler(
     console.log(protectedHeader);
     return res.status(200).send({userId: payload.user})
   } catch (err) {
-    res.setHeader(
-      "Set-Cookie",
-      serialize("jit", "", { maxAge: -1, path: "/" })
-    );
     return res.status(401).send({ Err: "Not Authenticated" });
   }
 

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { OpenRoomContext } from "..";
+import { authOnlyResHandler } from "../../../lib/clientSideRequest";
 import { API, REDIRECT } from "../../../lib/constants";
+import { AuthContext } from "../../../modules/authProvider";
 
 interface Props {
   link: string;
@@ -15,12 +17,24 @@ interface Props {
 const Room: NextPage<Props> = ({ link, id, origin, removeRoom }) => {
   const openedRoom = useContext(OpenRoomContext);
   const router = useRouter();
+  const { accessToken } = useContext(AuthContext);
 
   const deleteRoom = async () => {
-    const res = await fetch(`${API}/rooms/delete-room`, {
-      method: "DELETE",
-      body: JSON.stringify({ id }),
-    });
+    const res = await authOnlyResHandler(
+      `${API}/rooms/delete-room`,
+      accessToken,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+      }
+    );
+    // const res = await fetch(`${API}/rooms/delete-room`, {
+    //   method: "DELETE",
+    //   body: JSON.stringify({ id }),
+    //   headers: {
+    //     authorization: `bearer ${getAccessToken()}`,
+    //   },
+    // });
     const data = await res.json();
 
     if (!res.ok) {

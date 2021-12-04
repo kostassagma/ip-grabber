@@ -4,6 +4,7 @@ import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import NProgress from "nprogress";
 import { Router } from "next/router";
+import AuthProvider from "../modules/authProvider";
 
 Router.events.on("routeChangeStart", () => {
   NProgress.start();
@@ -12,8 +13,12 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }: AppProps) {
+//   useEffect(() => {
+//     console.log(`token->"${getAccessToken}"`);
+//   })
+
   return (
-    <div>
+    <AuthProvider>
       <Head>
         <title>Ip Grabber</title>
         <meta
@@ -24,7 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Component {...pageProps} />
       <Toaster />
-    </div>
+    </AuthProvider>
   );
 }
 

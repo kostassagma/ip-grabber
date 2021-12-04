@@ -1,7 +1,9 @@
 import type { NextPage } from "next";
 import { useContext, useEffect, useState } from "react";
 import { OpenRoomContext } from "..";
+import { authOnlyResHandler } from "../../../lib/clientSideRequest";
 import { API } from "../../../lib/constants";
+import { AuthContext } from "../../../modules/authProvider";
 
 interface Visitors {
   ip: string;
@@ -23,12 +25,17 @@ const RoomDetailsTab: NextPage = () => {
     visitors: [],
   });
   const { id } = useContext(OpenRoomContext);
+  const { accessToken } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`${API}/rooms/get-room-details?id=${id}`);
+      const res = await authOnlyResHandler(
+        `${API}/rooms/get-room-details?id=${id}`,
+        accessToken
+      );
+
       if (!res.ok) {
-        return
+        return;
       }
       const data = await res.json();
       setRoomDetails(data);

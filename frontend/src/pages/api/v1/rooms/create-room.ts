@@ -4,7 +4,7 @@ import checkParamPresence from "../../../../lib/checkParamPresence";
 import { nanoid } from "nanoid";
 import { connectToDatabase } from "../../../../lib/mongodb";
 import { JWT_SECRET_KEY } from "../../../../lib/constants";
-import { serialize } from "cookie";
+// import { serialize } from "cookie";
 import { jwtVerify } from "jose";
 import { urlToPath } from "../../../../lib/checkValidUrl";
 
@@ -15,15 +15,15 @@ export default async function handler(
   const [err, {link}] = checkParamPresence(["link"], req, res, "POST")
   if (err) return;
   
-  const { jit } = req.cookies;
-  if (!jit) {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
     return res.status(401).send({ Err: "Not Authenticated" });
   }
 
   let owner:any = ""
   try {
     const { payload, protectedHeader } = await jwtVerify(
-      jit,
+      token,
       new TextEncoder().encode(JWT_SECRET_KEY)
     );
     if (!payload.user) {
@@ -31,10 +31,6 @@ export default async function handler(
     }
     owner = payload.user
   } catch (err) {
-    res.setHeader(
-      "Set-Cookie",
-      serialize("jit", "", { maxAge: -1, path: "/" })
-    );
     return res.status(401).send({ Err: "Not Authenticated" });
   }
 
@@ -53,8 +49,7 @@ export default async function handler(
       id,
       link,
       origin: linkDets.hostname,
-      owner,
-      visitors: []
+      owner
     });
 
     return res.status(200).json({ id }); 

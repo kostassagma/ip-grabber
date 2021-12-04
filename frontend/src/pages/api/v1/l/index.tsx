@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { time } from "console";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
 import { connectToDatabase } from "../../../../lib/mongodb";
 
 export default async function handler(
@@ -21,8 +20,18 @@ export default async function handler(
       throw new Error();
     }
     console.log(room.link);
-    let visitors = room.visitors;
-    visitors.push({
+    // let visitors = room.visitors;
+    // visitors.push({
+    //   ip,
+    //   time: new Date().toLocaleDateString(undefined, {
+    //     hour: "2-digit",
+    //     minute: "2-digit",
+    //     second: "2-digit",
+    //   }),
+    // });
+    // await db.collection("rooms").updateOne({ id }, { $set: { visitors } });
+    await db.collection("visitors").insertOne({
+      roomId: id,
       ip,
       time: new Date().toLocaleDateString(undefined, {
         hour: "2-digit",
@@ -30,7 +39,6 @@ export default async function handler(
         second: "2-digit",
       }),
     });
-    await db.collection("rooms").updateOne({ id }, { $set: { visitors } });
     return res.redirect(room.link);
   } catch (e) {
     return res.redirect("/");

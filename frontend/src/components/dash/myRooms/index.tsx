@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import NProgress from "nprogress";
 import Room from "./room";
 import { useRouter } from "next/router";
 import { urlToPath } from "../../../lib/checkValidUrl";
 import { API } from "../../../lib/constants";
+import { authOnlyResHandler } from "../../../lib/clientSideRequest";
+import { AuthContext } from "../../../modules/authProvider";
 
 interface Rooms {
   link: string;
@@ -16,11 +18,12 @@ const MyRoomsTab: NextPage = () => {
   const [myRooms, setMyRooms] = useState<Rooms[]>([]);
   const [newRoom, setNewRoom] = useState("");
   const [newRoomErr, setNewRoomErr] = useState("");
-  const router = useRouter();  
+  const router = useRouter();
+  const { accessToken } = useContext(AuthContext);
 
   useEffect(() => {
     NProgress.start();
-    fetch(`${API}/rooms/get-my-rooms`)
+    authOnlyResHandler(`${API}/rooms/get-my-rooms`, accessToken)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
@@ -59,14 +62,18 @@ const MyRoomsTab: NextPage = () => {
       return setNewRoomErr("Enter a valid link");
     }
     NProgress.start();
-    const res = await fetch(`${API}/rooms/create-room`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ link: newRoom }),
-    });
+    const res = await authOnlyResHandler(
+      `${API}/rooms/create-room`,
+      accessToken,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ link: newRoom }),
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       NProgress.done();
@@ -84,7 +91,10 @@ const MyRoomsTab: NextPage = () => {
   };
 
   return (
-    <div style={{maxHeight: "inherit"}} className="rounded-md shadow-md p-5 w-full h-full flex flex-col">
+    <div
+      style={{ maxHeight: "inherit" }}
+      className="rounded-md shadow-md p-5 w-full h-full flex flex-col"
+    >
       <h1 className="text-3xl font-bold mb-1">My Rooms</h1>
       <div className="h-full overflow-y-scroll">
         {myRooms.map((e) => (

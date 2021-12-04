@@ -12,8 +12,8 @@ const CreateAccount: NextPage = () => {
   const [invalidPassword, setInvalidPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [strenght, setStrenght] = useState(passwordStrength(""));
-  const {code} = useContext(ValidCodeContext)
-  const router = useRouter()
+  const { code } = useContext(ValidCodeContext);
+  const router = useRouter();
 
   const enterCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,10 +37,11 @@ const CreateAccount: NextPage = () => {
       },
       body: JSON.stringify({ username, password, code }),
     });
+
     if (!res.ok) {
-      return setInvalidUsername("Username Taken")
+      return setInvalidUsername("Username Taken");
     }
-    router.push("/dash?joined=true")
+    router.push("/dash?joined=true");
   };
 
   return (
