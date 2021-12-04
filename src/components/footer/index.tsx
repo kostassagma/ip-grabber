@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Link from "next/link";
 
 const Footer: NextPage = () => {
   return (
@@ -8,11 +9,31 @@ const Footer: NextPage = () => {
       </div>
       <ul>
         <h2 className="text-2xl font-bold">Links</h2>
-        <li>Github</li>
-        <li>Terms & Conditions</li>
-        <li>Login</li>
-        <li>Register</li>
-        <li>Report an issue</li>
+        <li>
+          <Link href="https://github.com/kostassagma/ip-grabber/" passHref>
+            <a target="_blank">Github</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/terms.html" passHref>
+            <a target="_blank">Terms & Conditions</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/login" passHref>
+            <a>Login</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/login/join" passHref>
+            <a>Register</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="https://github.com/kostassagma/ip-grabber/issues/new" passHref>
+            <a target="_blank">Report an issue</a>
+          </Link>
+        </li>
       </ul>
     </div>
   );
