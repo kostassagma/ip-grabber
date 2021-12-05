@@ -29,10 +29,8 @@ const DashNav: NextPage = () => {
               />
               <h1 className="text-2xl">{username}</h1>
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
-                fill="currentColor"
                 className="h-10"
                 viewBox="0 0 16 16"
               >
@@ -55,7 +53,7 @@ export default DashNav;
 const DropDownMenu: NextPage = () => {
   return (
     <div className="bg-white text-base z-10 list-none divide-y divide-gray-100 rounded shadow w-44 fixed right-3 mt-1">
-      <ul className="py-1" aria-labelledby="dropdownButton">
+      <ul className="py-1">
         <Link href="/dash" passHref>
           <DropDownItem>Dashboard</DropDownItem>
         </Link>
